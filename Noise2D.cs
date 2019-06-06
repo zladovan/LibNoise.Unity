@@ -462,6 +462,29 @@ namespace LibNoise
         public Texture2D GetTexture(Gradient gradient)
         {
             var texture = new Texture2D(_width, _height);
+            var pixels = GetTexturePixels(gradient);
+            texture.SetPixels(pixels);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.Apply();
+            return texture;
+        }
+
+        /// <summary>
+        /// Creates a grayscale texture pixels array for the current content of the noise map.
+        /// </summary>
+        /// <returns>The created texture pixels array.</returns>
+        public Color[] GetTexturePixels()
+        {
+            return GetTexturePixels(GradientPresets.Grayscale);
+        }
+
+        // <summary>
+        /// Creates a texture pixels array for the current content of the noise map.
+        /// </summary>
+        /// <param name="gradient">The gradient to color the texture map with.</param>
+        /// <returns>The created texture pixels array.</returns>
+        public Color[] GetTexturePixels(Gradient gradient)
+        {
             var pixels = new Color[_width * _height];
             for (var x = 0; x < _width; x++)
             {
@@ -480,10 +503,7 @@ namespace LibNoise
                     pixels[x + y * _width] = gradient.Evaluate((sample + 1) / 2);
                 }
             }
-            texture.SetPixels(pixels);
-            texture.wrapMode = TextureWrapMode.Clamp;
-            texture.Apply();
-            return texture;
+            return pixels;
         }
 
         /// <summary>
